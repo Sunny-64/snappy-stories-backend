@@ -9,7 +9,15 @@ import {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors()); 
+app.use(cors({
+    origin : "*", 
+    optionsSuccessStatus : 204
+})); 
+// app.options("*", cors());
+
+app.get("/", (req, res) => {
+    res.send("hi");
+})
 
 
 app.use(errorHandler)
