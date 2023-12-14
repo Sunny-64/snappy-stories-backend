@@ -1,7 +1,8 @@
 
 import { Server } from "socket.io";
-import chatSocket  from "./chatSocket";
 
+// Custom imports
+import chatSocket  from "./chatSocket";
 
 const connectSocket = (httpServer:any) => {
     const io = new Server(httpServer, {

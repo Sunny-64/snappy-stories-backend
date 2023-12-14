@@ -1,4 +1,4 @@
-import { configDotenv } from "dotenv";
+import dotenv from "dotenv";
 import {createServer} from 'http'; 
 import mongoose from "mongoose";
 
@@ -7,12 +7,12 @@ import app from "./app";
 import connectSocket from "./sockets";
 
 // Environment initialization
-configDotenv();
+dotenv.config();
 const httpServer = createServer(app); 
 
-const PORT = process.env.PORT || 3000; 
+const PORT = process.env.PORT || 3000;
 
-mongoose.connect(process.env.DB_URI).then(() => {
+mongoose.connect(process.env.DB_URI!).then(() => {
     console.log("Connected to MongoDB"); 
     httpServer.listen(3000, () => {
         console.log(`SERVER RUNNING AT : http://localhost:${PORT}`)
