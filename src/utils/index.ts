@@ -1,7 +1,7 @@
-import AppError from "./AppError";
+import ApiError from "./ApiError";
 import { catchAsync } from "./catchAsync";
 
 export {
-    AppError, 
+    ApiError, 
     catchAsync,
 }

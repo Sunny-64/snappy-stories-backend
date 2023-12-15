@@ -1,5 +1,7 @@
 import mongoose, {Schema} from 'mongoose'; 
 
+import {otpTypes} from './../configs';
+
 const otpSchema:Schema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -9,6 +11,14 @@ const otpSchema:Schema = new mongoose.Schema({
       otp: {
         type: String,
         required: true,
+      },
+      isVerified : {
+        type : Boolean, 
+        default : false
+      }, 
+      otpType : {
+          type : String, 
+          enum : Object.values(otpTypes)
       },
       expiresAt: {
         type: Date,

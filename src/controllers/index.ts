@@ -2,15 +2,21 @@
 import {
     register, 
     loginUsingEmailAndPassword, 
-    verifyOtp, 
+    verifyEmail, 
     resendOtp,
+    forgotPassword,
+    verifyOtp,
+    resetPassword,
 } from './auth.controller'; 
 
 export {
     register,
     loginUsingEmailAndPassword,
-    verifyOtp, 
+    verifyEmail, 
     resendOtp,
+    forgotPassword,
+    verifyOtp,
+    resetPassword,
 }
 
 // user controller import /exports

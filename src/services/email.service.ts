@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import dotenv from 'dotenv'; 
 
 import { Otp as OtpModel, User} from "./../models";
-import { AppError } from "./../utils";
+import { ApiError } from "./../utils";
 dotenv.config(); 
 
 const transporter = nodemailer.createTransport({
@@ -14,11 +14,11 @@ const transporter = nodemailer.createTransport({
 });
 
 
-export const sendOtp = async (userId:string) => {
+export const sendOtp = async (userId:string, otpType:string) => {
   const OTP: number = Math.floor(Math.random() * 900000 + 100000);
   try{
     const user = await User.findById(userId); 
-    if(!user) throw new AppError("Invalid UserId in register", 500); 
+    if(!user) throw new ApiError("Invalid UserId in register", 500); 
     const mailOptions = {
       from: "sunny6464n@gmail.com", // sender address
       to: user.email, // list of receivers
@@ -34,6 +34,7 @@ export const sendOtp = async (userId:string) => {
       const otpObj = new OtpModel({
         userId : user._id, 
         otp : OTP, 
+        otpType,
       }); 
       await otpObj.save(); 
       console.log("otp saved");
@@ -44,5 +45,4 @@ export const sendOtp = async (userId:string) => {
     return false;
   }
 }
-
 

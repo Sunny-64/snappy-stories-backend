@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 // Custom imports
 import { ICustomRequest } from 'types';
-import { AppError } from './../utils';
+import { ApiError } from './../utils';
 
 
 export const auth = (req:ICustomRequest, res:Response, next:NextFunction) => {
@@ -11,7 +11,7 @@ export const auth = (req:ICustomRequest, res:Response, next:NextFunction) => {
     const token = req.headers['authorization'] as string;
    
     if (!token) {
-        throw new AppError("Unauthorized", 401)
+        throw new ApiError("Unauthorized", 401)
     }
     let tokenValue = token.split(" ")[1]; 
     jwt.verify(tokenValue, process.env.JWT_SECRET_KEY!, (err, decoded) => {
