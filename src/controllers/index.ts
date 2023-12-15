@@ -1,17 +1,25 @@
 // Auth controller import/exports
 import {
-    register
+    register, 
+    loginUsingEmailAndPassword, 
+    verifyOtp, 
+    resendOtp,
 } from './auth.controller'; 
 
 export {
     register,
+    loginUsingEmailAndPassword,
+    verifyOtp, 
+    resendOtp,
 }
 
 // user controller import /exports
 import {
-    getAllUsers
+    getAllUsers, 
+    getUserWithId,
 } from './user.controller'; 
 
 export {
     getAllUsers,
+    getUserWithId,
 }

@@ -1,5 +1,6 @@
 import express from "express";
 import cors from 'cors'
+import { seed } from "./seed";
 
 // Custom Imports
 import { 
@@ -35,5 +36,7 @@ app.get("*", (req, res) => {
     })
 }); 
 
-app.use(errorHandler)
+seed(); 
+
+app.use(errorHandler); 
 export default app; 

@@ -1,12 +1,15 @@
 import express from "express";
 
 // Custom imports 
-import { getAllUsers } from "./../../controllers";
+import { getAllUsers, getUserWithId } from "./../../controllers";
 import { catchAsync } from "./../../utils";
+import { auth } from "./../../middlewares";
+import { requiredRole } from "./../../middlewares";
 
 const router = express.Router(); 
 
-router.get("/", catchAsync(getAllUsers)); 
+router.use(auth); 
+router.get("/", requiredRole('admin'), catchAsync(getAllUsers)); 
+router.get("/:id", catchAsync(getUserWithId))
 
-
-export default router; 
+export default router;  
