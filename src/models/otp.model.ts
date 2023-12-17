@@ -6,7 +6,7 @@ const otpSchema:Schema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref : 'User'
+        ref : 'User', 
       },
       otp: {
         type: String,
@@ -27,4 +27,4 @@ const otpSchema:Schema = new mongoose.Schema({
       },
 }, {timestamps : true}); 
 
-export default mongoose.model("Otp", otpSchema); 
+export default mongoose.model("Otp", otpSchema);                                       

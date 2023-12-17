@@ -11,7 +11,7 @@ import {
     USER_NOT_FOUND,
 } from "./../constants/response";
 import { sendOtp } from "./../services";
-import { ICustomRequest } from "types";
+import { ICustomRequest, IResponseObject } from "types";
 import { otpTypes } from "./../configs";
 
 
@@ -72,16 +72,16 @@ export const loginUsingEmailAndPassword = async (req: Request, res: Response) =>
     const payload = doesUserExist.toJSON();
     delete payload.password;
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY!);
-    let message = null; 
+    const responseJson:IResponseObject = {
+        message: "Logged in Successfully",
+        token,
+    }
     if(!doesUserExist.isEmailVerified){
         sendOtp(doesUserExist._id as string, otpTypes.VERIFY_EMAIL); 
-        message = "Please verify the email, otp sent"; 
+        responseJson.message = "Please verify the email, otp sent"; 
+        responseJson.otpType = otpTypes.VERIFY_EMAIL
     }
-    res.status(200).json({
-        message: message ?? "Logged in Successfully",
-        token,
-        otpType : otpTypes.VERIFY_EMAIL
-    })
+    res.status(200).json(responseJson)
 }
 
 /**
@@ -96,8 +96,8 @@ export const verifyEmail = async (req: ICustomRequest, res: Response) => {
     if (!otp) throw new ApiError("Invalid Otp", 400);
     const fetchOtp = await Otp.findOne({ userId: user._id }).sort({ createdAt: -1 })
     if (!fetchOtp || fetchOtp.isVerified) throw new ApiError("OTP expired", 400); 
-    
     if (fetchOtp.otp !== otp || fetchOtp.otpType !== otpTypes.VERIFY_EMAIL) throw new ApiError("Invalid OTP", 400); 
+    
     // otp matched so find user and mark email verified true
     const fetchUser = await User.findById(user._id);
     if (!fetchUser) throw new ApiError("User not found", 404); 
@@ -155,7 +155,7 @@ export const verifyOtp = async (req:Request, res:Response) => {
 /**
  * @description : Verifies the user and updates the password
  * @param newPassword 
- */
+*/
 
 export const resetPassword = async (req:Request, res:Response) => {
     const {newPassword} = req.body; 

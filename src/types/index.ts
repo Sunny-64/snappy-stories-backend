@@ -6,3 +6,9 @@ import { Request } from "express";
 export interface ICustomRequest extends Request {
     user?: any; // Replace 'any' with the actual type of your 'user' property if known
 }
+
+export interface IResponseObject {
+    message : string, 
+    token : string, 
+    otpType ?: string
+}

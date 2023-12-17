@@ -13,7 +13,7 @@ const connectSocket = (httpServer:any) => {
    
     io.on("connection", (socket) => {
         console.log("User connected...."); 
-        chatSocket(socket); 
+        chatSocket(socket, io); 
         socket.on("disconnect", () => {
             console.log("User disconnected!!!"); 
         })

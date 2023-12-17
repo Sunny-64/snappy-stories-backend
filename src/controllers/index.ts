@@ -29,3 +29,12 @@ export {
     getAllUsers,
     getUserWithId,
 }
+
+// chat controller
+import {
+    createNewConversation, 
+} from './message.controller'; 
+
+export {
+    createNewConversation,
+}

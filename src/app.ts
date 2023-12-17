@@ -10,6 +10,7 @@ import {
  import {
     userRoutes, 
     authRoutes,
+    messageRoutes,
 } from './routes/v1'
 
 const app = express();
@@ -28,15 +29,16 @@ app.get("/", (req, res) => {
 
 app.use("/v1/users", userRoutes);
 app.use("/v1/auth", authRoutes);
+app.use("/v1/messages", messageRoutes);
 
 app.get("*", (req, res) => {
     res.status(404).json({
         success : false, 
-        message : "not found"
+        message : "Route not found"
     })
 }); 
 
 seed(); 
-
 app.use(errorHandler); 
+
 export default app; 
