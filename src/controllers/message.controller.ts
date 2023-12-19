@@ -1,60 +1,47 @@
-import { Response } from "express"
-import { Conversation, Message } from "./../models"
-import { ICustomRequest } from "./../types";
+import { Request, Response } from "express"
+
+// Custom imports
+import { Message, Conversation } from "./../models"
 import { ApiError } from "./../utils";
+import { ICustomRequest } from "./../types";
+import { emitSocketEvent } from "./../sockets";
+import chatEvents from "./../constants/chatEvents";
 
-// export const sendMessage = async (req: ICustomRequest, res: Response) => {
-//     const { userId } = req.params;
-//     const { message } = req.body;
-//     const currentUser = req.user._id;
-
-//     // check if id is valid
-//     let existingConversation = await Conversation.findOne({
-//         participants: {
-//             $elemMatch: { $in: [currentUser, userId] },
-//             $size: 2, 
-//         },
-//     });
-//     if(!existingConversation){
-//         const newConversation = new Conversation({
-//             participants : [currentUser, userId]
-//         }); 
-//         existingConversation = await newConversation.save(); 
-//     }
-//     // save the message
-//     const newMessage = new Message({
-//         conversationId : existingConversation._id, 
-//         message : message, 
-//         author : currentUser,
-//     }); 
-
-//     await newMessage.save(); 
-//     res.status(200).json({message : "Message Saved"}); 
-// }                                                                         
-
-export const createNewConversation = async (req: ICustomRequest, res: Response) => {
-    const { targetId } = req.body;
-    const userId = req.user._id;
-    // make a check for targetId I'll skip it for now.
-
-    const doesConversationAlreadyExists = await Conversation.find({
-        $elemMatch: { $in: [userId, targetId] },
-        $size: 2,
-    }); 
-
-    if(!doesConversationAlreadyExists) throw new ApiError("Conversation Already Exist", 400); 
-    const conversationObj = {
-        participants : [userId, targetId], 
-    }; 
-    const newConversation = new Conversation(conversationObj); 
-    await newConversation.save(); 
-    res.status(200).json({message : "Conversation created"}); 
+export const getAllMessagesOfAConversation = async (req:Request, res:Response) => {
+    const {conversationId} = req.params; 
+    const doesConversationExist = await Conversation.findById(conversationId); 
+    if(!doesConversationExist) throw new ApiError("Conversation does not exist", 400); 
+    const messages = await Message.find({conversationId}).populate("conversationId").sort({createdAt : -1}); 
+    res.status(200).json({message : "fetched all messages", data : messages});
 }
 
-export const fetchConversationsOfUser = async (req:ICustomRequest, res:Response) => {
-    const conversations = await Conversation.find({
-        participants: { $in: [req.user._id] },
+export const sendMessage = async (req:ICustomRequest, res:Response) => {
+    const {conversationId} = req.params; 
+    const {message} = req.body; 
+    const user = req.user; 
+    
+    const doesConversationExist = await Conversation.findById(conversationId); 
+    if(!doesConversationExist) throw new ApiError("Conversation does not exist", 400); 
+
+    const messageObj = {
+        conversationId, 
+        message, 
+        author : user._id, 
+    }
+
+    const newMessage = new Message(messageObj); 
+    const savedMessage = await newMessage.save(); 
+
+    doesConversationExist.participants.forEach((participant: any) => {
+        if (participant?._id?.toString() === req?.user?._id?.toString()) return; // don't emit the event for the logged in use as he is the one who is initiating the chat
+        // emit event to other participants with new chat as a payload
+        emitSocketEvent(
+            req,
+            participant?._id?.toString(),
+            chatEvents.NEW_MESSAGE,
+            savedMessage?.message
+        );
     });
 
-    res.status(200).json({message : "fetched conversations", data : conversations}); 
+    res.status(200).json({message : "Message Sent Succcessfully"});
 }

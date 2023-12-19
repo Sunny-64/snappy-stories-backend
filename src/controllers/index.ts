@@ -1,18 +1,18 @@
 // Auth controller import/exports
 import {
-    register, 
-    loginUsingEmailAndPassword, 
-    verifyEmail, 
+    register,
+    loginUsingEmailAndPassword,
+    verifyEmail,
     resendOtp,
     forgotPassword,
     verifyOtp,
     resetPassword,
-} from './auth.controller'; 
+} from './auth.controller';
 
 export {
     register,
     loginUsingEmailAndPassword,
-    verifyEmail, 
+    verifyEmail,
     resendOtp,
     forgotPassword,
     verifyOtp,
@@ -21,20 +21,34 @@ export {
 
 // user controller import /exports
 import {
-    getAllUsers, 
+    getAllUsers,
     getUserWithId,
-} from './user.controller'; 
+} from './user.controller';
 
 export {
     getAllUsers,
     getUserWithId,
 }
 
-// chat controller
+// Conversation controller
 import {
-    createNewConversation, 
-} from './message.controller'; 
+    createOrGetConversation,
+    fetchConversationsOfUser
+} from './conversation.controller';
 
 export {
-    createNewConversation,
+    createOrGetConversation,
+    fetchConversationsOfUser,
+}
+
+// Message controller
+
+import {
+    getAllMessagesOfAConversation, 
+    sendMessage
+} from './message.controller';
+
+export {
+    getAllMessagesOfAConversation,
+    sendMessage,
 }

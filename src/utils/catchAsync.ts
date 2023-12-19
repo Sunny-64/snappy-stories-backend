@@ -4,6 +4,7 @@ export const catchAsync = (controller:RequestHandler) => async (req:Request, res
         await controller(req, res, next); 
     }
     catch(err){
+        console.log(err); 
         next(err);
     }
 }

@@ -1,18 +1,12 @@
-import express from 'express'
-
-// Custom imports
-import { createNewConversation } from './../../controllers';
+import express from 'express'; 
 import { auth } from './../../middlewares';
+import { getAllMessagesOfAConversation, sendMessage } from './../../controllers';
+import { catchAsync } from './../../utils';
+
 const router = express.Router(); 
 
-router.get("/", (req, res) => {
-    res.status(200).json({
-        message : "test route",
-    })
-}); 
-
-router.use(auth); 
-
-router.post("/conversations", createNewConversation); 
+router.use(auth);
+router.get("/:conversationId", catchAsync(getAllMessagesOfAConversation)); 
+router.post("/:conversationId", catchAsync(sendMessage))
 
 export default router; 
