@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 
 export const sendOtp = async (userId:string, otpType:string) => {
-  const OTP: number = Math.floor(Math.random() * 900000 + 100000);
+  const OTP: number = Math.floor(Math.random() * 90000 + 10000);
   try{
     const user = await User.findById(userId); 
     if(!user) throw new ApiError("Invalid UserId in register", 500); 

@@ -24,6 +24,7 @@ import { otpTypes } from "./../configs";
  * @returns 
  */
 
+// multer middleware for profile pictures and favGenres and joi validations 
 export const register = async (req: Request, res: Response) => {
     const {
         username,
@@ -92,11 +93,13 @@ export const loginUsingEmailAndPassword = async (req: Request, res: Response) =>
 
 export const verifyEmail = async (req: ICustomRequest, res: Response) => {
     const { otp } = req.body;
+    console.log(otp, "otp..........");
     const user = req.user;
     if (!otp) throw new ApiError("Invalid Otp", 400);
     const fetchOtp = await Otp.findOne({ userId: user._id }).sort({ createdAt: -1 })
     if (!fetchOtp || fetchOtp.isVerified) throw new ApiError("OTP expired", 400); 
-    if (fetchOtp.otp !== otp || fetchOtp.otpType !== otpTypes.VERIFY_EMAIL) throw new ApiError("Invalid OTP", 400); 
+    console.log(fetchOtp.otp !== otp, ">>>>>>>>>>>>>>>>>", "type of fetchOtp.otp : ", typeof fetchOtp.otp, " type of otp : ", typeof otp);
+    if (fetchOtp.otp !== otp || fetchOtp.otpType !== otpTypes.VERIFY_EMAIL) throw new ApiError("Invalid OTP in db", 400); 
     
     // otp matched so find user and mark email verified true
     const fetchUser = await User.findById(user._id);
@@ -116,7 +119,8 @@ export const verifyEmail = async (req: ICustomRequest, res: Response) => {
 
 export const resendOtp = async (req: ICustomRequest, res: Response) => {
     const {otpType} = req.body; 
-    if(!otpTypes.hasOwnProperty(otpType)) throw new ApiError("Invalid Otp", 400); 
+    // console.log("OTP type >>>>>>> ",otpType); 
+    if(otpTypes.VERIFY_EMAIL !== otpType) throw new ApiError("Invalid Otp", 400); 
     const otpSent = await sendOtp(req.user._id, otpType);
     if (!otpSent) return res.status(500).json({ message: 'failed to send otp' });
     res.status(200).json({ message: 'OTP sent' });

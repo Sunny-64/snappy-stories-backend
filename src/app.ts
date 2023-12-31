@@ -3,6 +3,7 @@ import cors from 'cors'
 import { seed } from "./seed";
 import {createServer} from 'http';
 import { Server } from "socket.io";
+import morgan from 'morgan'
 
 // Custom Imports
 import { initializeSocket } from "./sockets";
@@ -28,7 +29,7 @@ const io = new Server(httpServer, {
 }); 
 
 app.set("io", io); 
-
+app.use(morgan('dev')); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
