@@ -11,7 +11,7 @@ import {
     USER_NOT_FOUND,
 } from "./../constants/response";
 import { sendOtp } from "./../services";
-import { ICustomRequest, IResponseObject } from "types";
+import { ICustomRequest, IResponseObject } from "./../types";
 import { otpTypes } from "./../configs";
 
 
@@ -173,3 +173,4 @@ export const resetPassword = async (req:Request, res:Response) => {
     await checkUser.save(); 
     res.status(200).json({message : "Password Reset successfully"}); 
 }
+

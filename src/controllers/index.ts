@@ -23,11 +23,13 @@ export {
 import {
     getAllUsers,
     getUserWithId,
+    getUserWithToken
 } from './user.controller';
 
 export {
     getAllUsers,
     getUserWithId,
+    getUserWithToken,
 }
 
 // Conversation controller
