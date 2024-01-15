@@ -16,6 +16,7 @@ import {
     authRoutes,
     conversationRoutes,
     messageRoutes,
+    diaryRoutes,
 } from './routes/v1'
 
 const app = express();
@@ -48,7 +49,8 @@ app.get("/", (req, res) => {
 app.use("/v1/users", userRoutes);
 app.use("/v1/auth", authRoutes);
 app.use("/v1/conversations", conversationRoutes);
-app.use("/v1/messages", messageRoutes)
+app.use("/v1/messages", messageRoutes); 
+app.use("/v1/diaries", diaryRoutes); 
 
 app.get("*", (req, res) => {
     res.status(404).json({

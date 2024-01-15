@@ -11,7 +11,7 @@ export const getAllMessagesOfAConversation = async (req:Request, res:Response) =
     const {conversationId} = req.params; 
     const doesConversationExist = await Conversation.findById(conversationId); 
     if(!doesConversationExist) throw new ApiError("Conversation does not exist", 400); 
-    const messages = await Message.find({conversationId}).populate("conversationId").sort({createdAt : -1}); 
+    const messages = await Message.find({conversationId}).populate("conversationId")
     res.status(200).json({message : "fetched all messages", data : messages});
 }
 
@@ -19,7 +19,6 @@ export const sendMessage = async (req:ICustomRequest, res:Response) => {
     const {conversationId} = req.params; 
     const {message} = req.body; 
     const user = req.user; 
-    
     const doesConversationExist = await Conversation.findById(conversationId); 
     if(!doesConversationExist) throw new ApiError("Conversation does not exist", 400); 
 
@@ -31,6 +30,8 @@ export const sendMessage = async (req:ICustomRequest, res:Response) => {
 
     const newMessage = new Message(messageObj); 
     const savedMessage = await newMessage.save(); 
+    doesConversationExist.updateAt = Date.now(); 
+    await doesConversationExist.save()
 
     doesConversationExist.participants.forEach((participant: any) => {
         if (participant?._id?.toString() === req?.user?._id?.toString()) return; // don't emit the event for the logged in use as he is the one who is initiating the chat
@@ -39,9 +40,9 @@ export const sendMessage = async (req:ICustomRequest, res:Response) => {
             req,
             participant?._id?.toString(),
             chatEvents.NEW_MESSAGE,
-            savedMessage?.message
+            savedMessage
         );
     });
 
-    res.status(200).json({message : "Message Sent Succcessfully"});
+    res.status(200).json({message : "Message Sent Succcessfully", data : savedMessage});
 }

@@ -3,6 +3,7 @@ import Genre from "./genre.model";
 import Otp from './otp.model'; 
 import Message from './message.model';
 import Conversation from './conversation.model'; 
+import Diary from "./diary.model";
 
 export {
     User, 
@@ -10,4 +11,5 @@ export {
     Otp,
     Message, 
     Conversation,
+    Diary
 }

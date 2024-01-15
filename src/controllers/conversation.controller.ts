@@ -19,8 +19,9 @@ export const createOrGetConversation = async (req: ICustomRequest, res: Response
         {
             $match: {
                 participants: {
-                    $in: [
-                        new mongoose.Types.ObjectId(req?.user?._id)
+                    $all: [
+                        new mongoose.Types.ObjectId(req?.user?._id), 
+                        new mongoose.Types.ObjectId(targetId) 
                     ]
                 }
             }
@@ -66,7 +67,13 @@ export const fetchConversationsOfUser = async (req: ICustomRequest, res: Respons
                 }
             }
         },
-        ...commonChatAggregation
-    ],);
+        ...commonChatAggregation, 
+        {
+            $sort: {
+              updatedAt: -1, // Sort by 'createdAt' field in descending order
+              createdAt : -1,
+            }
+          }
+    ]);
     res.status(200).json({ message: "fetched conversations", data: conversations });
 }

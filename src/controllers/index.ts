@@ -54,3 +54,23 @@ export {
     getAllMessagesOfAConversation,
     sendMessage,
 }
+
+// Diary controller
+
+import { 
+    getAllDiariesOfUser, 
+    createNewDiary, 
+    updateDiaryWithId, 
+    deleteDiaryWithId, 
+    getDiaryByDate, 
+    getDiaryById,
+} from './diary.controller';
+
+export {
+    getAllDiariesOfUser, 
+    createNewDiary, 
+    updateDiaryWithId, 
+    deleteDiaryWithId, 
+    getDiaryByDate, 
+    getDiaryById, 
+}

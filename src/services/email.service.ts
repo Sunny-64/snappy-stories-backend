@@ -24,7 +24,7 @@ export const sendOtp = async (userId:string, otpType:string) => {
       to: user.email, // list of receivers
       subject: "Verify Email", // Subject line
       html: `Dear user,
-      To verify your email, click on this link: ${OTP}
+      To verify your email, enter this OTP: ${OTP}
       If you did not create an account, then ignore this email.`
     }
     const info = await transporter.sendMail(mailOptions);

@@ -98,7 +98,6 @@ export const verifyEmail = async (req: ICustomRequest, res: Response) => {
     if (!otp) throw new ApiError("Invalid Otp", 400);
     const fetchOtp = await Otp.findOne({ userId: user._id }).sort({ createdAt: -1 })
     if (!fetchOtp || fetchOtp.isVerified) throw new ApiError("OTP expired", 400); 
-    console.log(fetchOtp.otp !== otp, ">>>>>>>>>>>>>>>>>", "type of fetchOtp.otp : ", typeof fetchOtp.otp, " type of otp : ", typeof otp);
     if (fetchOtp.otp !== otp || fetchOtp.otpType !== otpTypes.VERIFY_EMAIL) throw new ApiError("Invalid OTP in db", 400); 
     
     // otp matched so find user and mark email verified true

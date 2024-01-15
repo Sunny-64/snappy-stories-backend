@@ -40,7 +40,7 @@ export const getUserWithId = async (req: Request, res: Response) => {
 
 export const getUserWithToken = async (req: ICustomRequest, res: Response) => {
     const userId: any = req.user._id;
-    const getUser = await User.findById(userId).select({ password: -1 });
+    const getUser = await User.findById(userId, {password : 0});
 
     if (!getUser) throw new ApiError("User not found", 404);
     return res.status(200).json({ message: "User fetched", data: getUser });
