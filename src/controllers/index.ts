@@ -26,6 +26,7 @@ import {
     getUserWithToken,
     updateUserDetails,
     updateEmail,
+    setOrUpdateAvatar,
 } from './user.controller';
 
 export {
@@ -34,6 +35,7 @@ export {
     getUserWithToken,
     updateUserDetails,
     updateEmail,
+    setOrUpdateAvatar,
 }
 
 // Conversation controller

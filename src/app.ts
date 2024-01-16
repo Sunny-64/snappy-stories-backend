@@ -3,7 +3,9 @@ import cors from 'cors'
 import { seed } from "./seed";
 import {createServer} from 'http';
 import { Server } from "socket.io";
-import morgan from 'morgan'
+import morgan from 'morgan'; 
+import helmet from "helmet";
+import path from 'path'; 
 
 // Custom Imports
 import { initializeSocket } from "./sockets";
@@ -31,8 +33,11 @@ const io = new Server(httpServer, {
 
 app.set("io", io); 
 app.use(morgan('dev')); 
+app.use(helmet()); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// expose public assets
+app.use("/avatars", express.static(path.join(__dirname + "/public/avatars")));
 app.use(cors({
     origin : "*", 
 })); 

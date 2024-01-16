@@ -12,6 +12,7 @@ import { sendOtp } from "./../services";
 import { otpTypes } from "./../configs";
 import bcrypt from 'bcrypt'
 import { validateEmail } from "./../validations";
+import { defaultAvatars, defaultAvatarKeys } from "./../constants/avatar";
 
 export const getAllUsers = async (req: ICustomRequest, res: Response) => {
     const fetchUsers = await User.find(
@@ -91,4 +92,33 @@ export const updateEmail = async (req: ICustomRequest, res: Response) => {
     const isOtpSent = await sendOtp(getUser._id as string, otpTypes.VERIFY_EMAIL); 
     if(!isOtpSent) return res.status(500).json({message : "Failed to send email please try again"}); 
     return res.status(200).json({message : 'OTP sent Please verify your email'}); 
+}
+
+export const setOrUpdateAvatar = async (req: ICustomRequest, res: Response) => {
+    const userId = req.user._id; 
+    const {avatar} : {avatar : string} = req.body; 
+    const getUser = await User.findById(userId);
+    if(!getUser) throw new ApiError("User not found", 404); 
+
+    // if there's no image provided but user has selected a default avatar.
+    if(avatar && !defaultAvatarKeys.includes(avatar)) throw new ApiError("Invalid Avatar Name", 400); 
+
+    if((!req?.file && !req?.file?.filename) && avatar) {
+        getUser.avatar = defaultAvatars[avatar]; 
+    }
+    
+    // if user hasn't provided any avatar and didn't select any default one.
+    else if((!req?.file && !req?.file?.filename) && !avatar) {
+        const randomNumber = Math.floor(Math.random() * 5 + 1); 
+        const selectRandomAvatar = defaultAvatarKeys[randomNumber]; 
+        getUser.avatar = defaultAvatars[selectRandomAvatar]; 
+    }
+    // if user has selected an avatar.
+    else {
+        console.log("executed...")
+        getUser.avatar = req?.file?.filename; 
+    }
+
+    await getUser.save(); 
+    res.status(200).json({message : 'Avatar set successfully'}); 
 }
