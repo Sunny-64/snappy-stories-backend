@@ -35,9 +35,7 @@ export const register = async (req: Request, res: Response) => {
 
     const checkIfUserExist = await User.findOne({ username, email });
 
-    if (checkIfUserExist) {
-        throw new ApiError(USER_ALREADY_REGISTERED.message, USER_ALREADY_REGISTERED.status);
-    }
+    if (checkIfUserExist) throw new ApiError(USER_ALREADY_REGISTERED.message, USER_ALREADY_REGISTERED.status);
 
     const newUser = new User({
         username,
@@ -82,7 +80,7 @@ export const loginUsingEmailAndPassword = async (req: Request, res: Response) =>
         responseJson.message = "Please verify the email, otp sent"; 
         responseJson.otpType = otpTypes.VERIFY_EMAIL
     }
-    res.status(200).json(responseJson)
+    return res.status(200).json(responseJson)
 }
 
 /**
@@ -107,7 +105,7 @@ export const verifyEmail = async (req: ICustomRequest, res: Response) => {
     fetchOtp.isVerified = true; 
     await fetchOtp.save(); 
     await fetchUser.save(); 
-    res.status(200).json({ message: "Email verified" });
+    return res.status(200).json({ message: "Email verified" });
 }
 
 /**
@@ -122,7 +120,7 @@ export const resendOtp = async (req: ICustomRequest, res: Response) => {
     if(otpTypes.VERIFY_EMAIL !== otpType) throw new ApiError("Invalid Otp", 400); 
     const otpSent = await sendOtp(req.user._id, otpType);
     if (!otpSent) return res.status(500).json({ message: 'failed to send otp' });
-    res.status(200).json({ message: 'OTP sent' });
+    return res.status(200).json({ message: 'OTP sent' });
 }
 
 /**
@@ -134,8 +132,8 @@ export const forgotPassword = async (req:ICustomRequest, res:Response) => {
     const {email} = req.body; 
     const doesUserExist = await User.findOne({email}); 
     if(!doesUserExist) throw new ApiError("User not Found", 404); 
-    sendOtp(doesUserExist._id as string, otpTypes.RESET_PASSWORD); 
-    res.status(200).json({message : "OTP sent", otpType : otpTypes.RESET_PASSWORD, data : doesUserExist._id}); 
+    await sendOtp(doesUserExist._id as string, otpTypes.RESET_PASSWORD); 
+    return res.status(200).json({message : "OTP sent", otpType : otpTypes.RESET_PASSWORD, data : doesUserExist._id}); 
 }
 
 /**
@@ -152,7 +150,7 @@ export const verifyOtp = async (req:Request, res:Response) => {
     if(checkOtp.otpType !== otpTypes.RESET_PASSWORD ||otp !== checkOtp.otp) throw new ApiError("OTP did not match", 400); 
     checkOtp.isVerified = true; 
     await checkOtp.save(); 
-    res.status(200).json({message : "Otp verified successfully"}); 
+    return res.status(200).json({message : "Otp verified successfully"}); 
 }
 
 /**
@@ -170,6 +168,6 @@ export const resetPassword = async (req:Request, res:Response) => {
     if(!checkUser) throw new ApiError("User not found", 404); 
     checkUser.password = bcrypt.hashSync(newPassword, 10);
     await checkUser.save(); 
-    res.status(200).json({message : "Password Reset successfully"}); 
+    return res.status(200).json({message : "Password Reset successfully"}); 
 }
 

@@ -28,11 +28,13 @@ const userSchema:Schema = new mongoose.Schema({
         enum: Object.values(roles),
         default : roles.user
     },
+    avatar : {
+        type : String, 
+    }, 
     // favGenres: [{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Genre'
     // }],
-
     status : {
         type : Boolean,
         default : true

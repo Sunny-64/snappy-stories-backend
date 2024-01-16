@@ -23,13 +23,17 @@ export {
 import {
     getAllUsers,
     getUserWithId,
-    getUserWithToken
+    getUserWithToken,
+    updateUserDetails,
+    updateEmail,
 } from './user.controller';
 
 export {
     getAllUsers,
     getUserWithId,
     getUserWithToken,
+    updateUserDetails,
+    updateEmail,
 }
 
 // Conversation controller

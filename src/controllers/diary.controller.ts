@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import {Diary} from './../models'
 import { ApiError } from "./../utils";
 import { ICustomRequest } from "types";
-import mongoose, { isValidObjectId, mongo } from "mongoose";
+import mongoose from "mongoose";
 
 export const getAllDiariesOfUser = async (req:ICustomRequest, res:Response) => {
     const userId = req.user._id; 
